@@ -1,0 +1,25 @@
+{
+  "name": "photo-share",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "author": "Doug Patti <douglas.patti@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/**/*.js",
+    "start": "node index.js",
+    "test": "yarn run lint; yarn run typecheck",
+    "typecheck": "flow check"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "koa": "^2.2.0",
+    "sequelize": "^3.30.4"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-flowtype": "^2.32.1",
+    "eslint-plugin-import": "^2.2.0",
+    "flow-bin": "^0.45.0"
+  }
+}
