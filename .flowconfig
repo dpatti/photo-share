@@ -6,5 +6,7 @@
 [include]
 
 [libs]
+./declarations
+./flow-typed
 
 [options]

@@ -6,20 +6,27 @@
   "author": "Doug Patti <douglas.patti@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src/**/*.js",
-    "start": "node index.js",
+    "lint": "eslint app/**/*.js",
+    "repl": "flow-node",
+    "start": "flow-node index.js",
     "test": "yarn run lint; yarn run typecheck",
     "typecheck": "flow check"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
+    "dotenv": "^4.0.0",
     "koa": "^2.2.0",
+    "koa-compose": "^4.0.0",
+    "koa-router": "^7.1.1",
+    "pg": "^6.1.5",
     "sequelize": "^3.30.4"
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
     "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.32.1",
-    "eslint-plugin-import": "^2.2.0",
-    "flow-bin": "^0.45.0"
+    "flow-bin": "^0.45.0",
+    "flow-remove-types": "^1.2.0",
+    "flow-typed": "^2.1.2"
   }
 }
