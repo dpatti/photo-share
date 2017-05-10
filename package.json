@@ -6,7 +6,7 @@
   "author": "Doug Patti <douglas.patti@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint app/**/*.js",
+    "lint": "eslint app/**/*.js web/app/**/*.js",
     "repl": "flow-node",
     "start": "flow-node index.js",
     "test": "yarn run lint; yarn run typecheck",
@@ -18,6 +18,7 @@
     "koa": "^2.2.0",
     "koa-compose": "^4.0.0",
     "koa-router": "^7.1.1",
+    "koa-static": "^3.0.0",
     "pg": "^6.1.5",
     "sequelize": "^3.30.4"
   },
@@ -27,6 +28,7 @@
     "eslint-plugin-flowtype": "^2.32.1",
     "flow-bin": "^0.45.0",
     "flow-remove-types": "^1.2.0",
-    "flow-typed": "^2.1.2"
+    "flow-typed": "^2.1.2",
+    "koa-webpack": "^0.4.0"
   }
 }

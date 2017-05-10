@@ -8,7 +8,7 @@ const app = new Koa();
 app.use(root.router);
 
 exports.start = () => {
-  app.listen(config.port, () =>
-    logger(`Listening on ${config.port}`)
-  );
+  app.listen(config.port, () => {
+    logger.info(`Listening on ${config.port}`);
+  });
 };
