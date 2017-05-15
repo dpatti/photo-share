@@ -31,6 +31,6 @@
     "flow-bin": "^0.45.0",
     "flow-remove-types": "^1.2.0",
     "flow-typed": "^2.1.2",
-    "koa-webpack": "^0.4.0"
+    "koa-webpack": "^0.5.1"
   }
 }
