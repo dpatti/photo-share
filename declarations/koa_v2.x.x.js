@@ -10,7 +10,13 @@ declare module 'koa' {
     req: IncomingMessage,
     res: ServerResponse,
 
+    request: Request,
     response: Response,
+
+    throw(status: ?number, message: ?string, properties: ?Object): void,
+  };
+
+  declare type Request = {
   };
 
   declare type Response = {

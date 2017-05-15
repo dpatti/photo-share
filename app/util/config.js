@@ -1,7 +1,7 @@
 // @flow
 const {isPlainObject, map, mapValues, propertyOf} = require('lodash');
 
-type Config = Env => mixed;
+type Config<T> = Env => T;
 type Env = {[string]: ?string};
 
 const fromMaybe = <T>(maybe: ?T, whenUndef: () => T): T =>
@@ -9,24 +9,31 @@ const fromMaybe = <T>(maybe: ?T, whenUndef: () => T): T =>
     ? whenUndef()
     : maybe;
 
-exports.required = (getter: Config) => (env: Env): mixed =>
-  fromMaybe(getter(env), () => {
-    throw Error('Environment variable is not defined');
-  });
+exports.required =
+  <T>(getter: Config<?T>): (Env => T) =>
+    (env: Env): T =>
+      fromMaybe(getter(env), () => {
+        throw Error('Environment variable is not defined');
+      });
 
-exports.optional = (getter: Config, def: mixed) => (env: Env) =>
-  fromMaybe(getter(env), () => def);
+exports.optional =
+  <T>(getter: Config<?T>, def: T): (Env => T) =>
+    (env: Env): T =>
+      fromMaybe(getter(env), () => def);
 
 exports.variable = (name: string) => (env: Env) => env[name];
 
 exports.computed =
-  (names: Array<string>, f: Array<?string> => mixed) =>
+  (names: Array<string>, f: <T>(Array<?string>) => T) =>
     (env: Env) =>
       f(map(names, propertyOf(env)));
 
-exports.fromEnv = (tree: Tree<string>, env: Env) =>
+exports.fromEnv = (tree: Tree<Config<*>>, env: Env) =>
   mapValues(tree, (value) =>
     isPlainObject(value)
       ? exports.fromEnv(value, env)
       : value(env)
   );
+
+exports.nodeEnv =
+  exports.optional(exports.variable('NODE_ENV'), 'development');
