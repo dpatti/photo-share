@@ -10,12 +10,12 @@ const hash = (password: string): Buffer =>
 const test = (password: string): boolean =>
   timingSafeEqual(hash(config.password), hash(password));
 
-const sign = (payload: JSON): string =>
+const sign = (payload: JSONValue): string =>
   jwt.sign(payload, config.secret, {algorithm: 'HS256'});
 
 const InvalidPassword = exports.InvalidPassword = customError('InvalidPassword');
 
-const verify = (token: string): JSON =>
+const verify = (token: string): JSONValue =>
   jwt.verify(token, config.secret, {algorithms: ['HS256']});
 
 exports.authenticate = (password: string) => {

@@ -20,7 +20,7 @@ declare module 'koa' {
   };
 
   declare type Response = {
-    body: JSON | ToJSON,
+    body: JSONValue | ToJSON,
     set(name: string, value: string): void,
   };
 

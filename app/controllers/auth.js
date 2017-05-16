@@ -7,7 +7,7 @@ const withBody = require('app/util/with-body');
 const respond = require('app/util/respond');
 const {InvalidPassword, authenticate} = require('app/services/auth');
 
-const toBody = (json: JSON): boolean =>
+const toBody = (json: JSONValue): boolean =>
   json != null
     && typeof json === 'object'
     && !Array.isArray(json)

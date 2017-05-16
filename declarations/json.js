@@ -1,6 +1,6 @@
-type JSON = null | boolean | string | number | JSONObject | JSONArray;
-type JSONObject = {[key: string]: JSON};
-type JSONArray = Array<JSON>;
+type JSONValue = null | boolean | string | number | JSONObject | JSONArray;
+type JSONObject = {[key: string]: JSONValue};
+type JSONArray = Array<JSONValue>;
 
 // ToJSON, i.e., an argument of JSON.stringify()
-type ToJSON = JSON | {toJSON: () => JSON}
+type ToJSON = JSONValue | {toJSON: () => JSONValue}
