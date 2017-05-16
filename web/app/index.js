@@ -1,3 +1,6 @@
 // @flow
-/* eslint-disable no-console */
-console.log('Hello world');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {AppComponent} from './components/app-component';
+
+ReactDOM.render(<AppComponent />, document.getElementById('stage'));
