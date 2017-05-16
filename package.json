@@ -21,15 +21,15 @@
     "koa-compose": "^4.0.0",
     "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
-    "pg": "^6.1.5",
+    "pg": "^6.2.2",
     "sequelize": "^3.30.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "eslint": "^3.19.0",
-    "eslint-plugin-flowtype": "^2.32.1",
-    "flow-bin": "^0.45.0",
-    "flow-remove-types": "^1.2.0",
+    "eslint-plugin-flowtype": "^2.33.0",
+    "flow-bin": "^0.46.0",
+    "flow-remove-types": "^1.2.1",
     "flow-typed": "^2.1.2",
     "koa-webpack": "^0.5.1"
   }
