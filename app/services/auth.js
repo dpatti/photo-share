@@ -15,8 +15,14 @@ const sign = (payload: JSONValue): string =>
 
 const InvalidPassword = exports.InvalidPassword = customError('InvalidPassword');
 
-const verify = (token: string): JSONValue =>
-  jwt.verify(token, config.secret, {algorithms: ['HS256']});
+const verify = (token: string): boolean => {
+  try {
+    jwt.verify(token, config.secret, {algorithms: ['HS256']});
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
 
 exports.authenticate = (password: string) => {
   if (test(password)) {

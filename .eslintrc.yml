@@ -37,7 +37,7 @@ rules:
   no-shadow: [error]
   no-spaced-func: [error]
   no-trailing-spaces: [error]
-  no-unused-vars: [error, {args: all, argsIgnorePattern: ^_}]
+  no-unused-vars: [error, {args: all, argsIgnorePattern: ^_, varsIgnorePattern: ^_}]
   no-useless-computed-key: [error]
   no-useless-constructor: [error]
   no-var: [error]

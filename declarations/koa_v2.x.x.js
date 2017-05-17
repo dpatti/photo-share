@@ -17,6 +17,7 @@ declare module 'koa' {
   };
 
   declare type Request = {
+    headers: {[key: string]: ?string},
   };
 
   declare type Response = {

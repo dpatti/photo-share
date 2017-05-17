@@ -1,9 +1,9 @@
 // @flow
 const uploads = require('app/controllers/uploads');
 const route = require('app/util/route');
+const withAuth = require('app/util/with-auth');
 
 exports.router = route(router => {
-  router.get('/uploads', uploads.index);
-  router.get('/uploads/:id', uploads.show);
-  router.post('/uploads', uploads.create);
+  router.get('/uploads', withAuth(uploads.index));
+  router.post('/uploads', withAuth(uploads.create));
 });

@@ -11,12 +11,6 @@ exports.index = async (context: Context) => {
   respond(context, uploads);
 };
 
-exports.show = async (context: Context, id: string) => {
-  const upload = first(await Upload.findById(Number(id)));
-
-  respond(context, upload);
-};
-
 exports.create = async (context: Context) => {
   respond(context, {});
 };
