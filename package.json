@@ -2,17 +2,19 @@
   "name": "photo-share",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
   "author": "Doug Patti <douglas.patti@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "db-sync": "bin/run db-sync",
     "lint": "eslint app/**/*.js web/app/**/*.js",
-    "repl": "flow-node",
-    "start": "flow-node index.js",
+    "repl": "bin/node",
+    "start": "bin/run start",
     "test": "yarn run lint; yarn run typecheck",
     "typecheck": "flow check"
   },
   "dependencies": {
+    "async-busboy": "^0.5.0",
+    "aws-sdk": "^2.55.0",
     "bluebird": "^3.5.0",
     "dotenv": "^4.0.0",
     "jsonwebtoken": "^7.4.0",
@@ -21,7 +23,9 @@
     "koa-compose": "^4.0.0",
     "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
+    "mime-types": "^2.1.15",
     "pg": "^6.2.2",
+    "request": "^2.81.0",
     "sequelize": "^3.30.4"
   },
   "devDependencies": {

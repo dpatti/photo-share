@@ -13,6 +13,7 @@ declare module 'koa' {
     request: Request,
     response: Response,
 
+    assert(value: boolean, status: ?number, msg: ?string, properties: ?Object): void,
     throw(status: ?number, message: ?string, properties: ?Object): void,
   };
 

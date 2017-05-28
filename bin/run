@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+script=$1
+shift
+
+"$(dirname $(realpath $0))/node" "scripts/$script" "$@"

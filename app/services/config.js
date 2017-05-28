@@ -21,4 +21,10 @@ module.exports = fromEnv({
   server: {
     port: optional(variable('SERVER_PORT'), 3000),
   },
+  storage: {
+    bucket: required(variable('STORAGE_BUCKET')),
+    namespace: optional(variable('STORAGE_NAMESPACE'), ''),
+    key: required(variable('STORAGE_KEY')),
+    secret: required(variable('STORAGE_SECRET')),
+  },
 }, process.env);

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+root=$(dirname $(dirname $(realpath $0)))
+
+env \
+  APP_ROOT=$root \
+  $(cat $root/config/.env 2> /dev/null) \
+  node_modules/.bin/flow-node "$@"
