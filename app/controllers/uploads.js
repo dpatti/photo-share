@@ -8,7 +8,12 @@ const respond = require('app/util/respond');
 const withFiles = require('app/util/with-files');
 
 exports.index = async (context: Context) => {
-  const uploads = await Upload.findAll();
+  const from = context.request.query.from || 0;
+  const uploads = await Upload.findAll({
+    order: [['createdAt', 'DESC']],
+    limit: 20,
+    offset: from,
+  });
 
   respond(context, uploads);
 };

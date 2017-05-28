@@ -10,7 +10,11 @@ export class UploadTileComponent extends React.Component {
   render() {
     return (
       <div className='upload-tile'>
-        [Upload]
+        <img
+          className='upload-tile__preview'
+          src={this.props.upload.previewUrl || this.props.upload.fileUrl}
+        />
+        <div className='upload-tile__uploader'>{`Uploaded by ${this.props.upload.uploader}`}</div>
       </div>
     );
   }
