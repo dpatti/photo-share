@@ -9,8 +9,11 @@ export class OptionsComponent extends React.Component {
   render() {
     return (
       <div className='options'>
-        <button onClick={this.props.onRequestUpload}>{
-          `Upload images or videos`
+        <button
+          className='options__upload button'
+          onClick={this.props.onRequestUpload}
+        >{
+          `Add your own images or videos`
         }</button>
       </div>
     );

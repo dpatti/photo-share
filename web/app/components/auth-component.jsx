@@ -45,11 +45,6 @@ export class AuthComponent extends React.Component {
   render() {
     return (
       <div className='auth'>
-        {
-          (this.state.error)
-            ? <div className='auth__error'>{this.state.error}</div>
-            : null
-        }
         <p className='auth__message'>{`Hey there, what's the password?`}</p>
         <form
           onSubmit={e => {
@@ -58,13 +53,24 @@ export class AuthComponent extends React.Component {
           }}
         >
           <input
+            className='auth__input'
             name='password'
             type='text'
-            className='auth__input'
             autoComplete='off'
             disabled={this.state.loading}
           ></input>
+          <input
+            className='auth__submit'
+            type='submit'
+            value='Go'
+            disabled={this.state.loading}
+          ></input>
         </form>
+        {
+          (this.state.error)
+            ? <div className='auth__error'>{this.state.error}</div>
+            : null
+        }
       </div>
     );
   }

@@ -116,9 +116,9 @@ export class UploaderComponent extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='uploader'>
         <button
-          className='uploader__back'
+          className='uploader__back button'
           disabled={this.state.queue.length > 0}
           onClick={() => { this.props.onDoneUploading(); }}
         >{`Return to album`}</button>
@@ -128,10 +128,11 @@ export class UploaderComponent extends React.Component {
         { this.renderQueuedUploads() }
 
         <label
-          className='uploader__name'
+          className='uploader__name-label'
         >
           {`What's your name?`}
           <input
+            className='uploader__name-input'
             type='text'
             value={this.state.uploader}
             onChange={e => { this.setUploader(e.target.value); }}
