@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {clamp, first, without} from 'lodash';
+import {first, without} from 'lodash';
 
 import {UploadProgress} from 'app/models/upload-progress';
 import {UploadProgressComponent} from './upload-progress-component';
@@ -31,7 +31,7 @@ export class UploaderComponent extends React.Component {
     };
   }
 
-  componentDidUpdate(_: any, prevState: $PropertyType<UploaderComponent, 'state'>) {
+  componentDidUpdate(_: mixed, prevState: $PropertyType<UploaderComponent, 'state'>) {
     if (this.state.active !== prevState.active || this.state.queue !== prevState.queue) {
       this.checkQueue();
     }
@@ -68,7 +68,7 @@ export class UploaderComponent extends React.Component {
   }
 
   createUpload(file: File): UploadProgress {
-    var data = new FormData();
+    const data = new FormData();
     data.append('uploadFile', file);
     data.append('uploader', this.state.uploader);
 
@@ -121,7 +121,7 @@ export class UploaderComponent extends React.Component {
           className='uploader__back button'
           disabled={this.state.queue.length > 0}
           onClick={() => { this.props.onDoneUploading(); }}
-        >{`Return to album`}</button>
+        >{'Return to album'}</button>
 
         { this.renderErrors() }
         { this.renderActiveUploads() }
@@ -130,7 +130,7 @@ export class UploaderComponent extends React.Component {
         <label
           className='uploader__name-label'
         >
-          {`What's your name?`}
+          {"What's your name?"}
           <input
             className='uploader__name-input'
             type='text'
@@ -154,7 +154,7 @@ export class UploaderComponent extends React.Component {
     if (this.state.active.length > 0) {
       return (
         <ul>{
-          this.state.active.map((progress, i) =>
+          this.state.active.map(progress =>
             <li key={progress.identifier}>
               <UploadProgressComponent
                 uploadProgress={progress}

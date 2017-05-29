@@ -1,2 +1,5 @@
 env:
   browser: true
+extends:
+  - plugin:react/recommended
+plugins: [react]

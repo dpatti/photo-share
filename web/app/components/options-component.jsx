@@ -13,7 +13,7 @@ export class OptionsComponent extends React.Component {
           className='options__upload button'
           onClick={this.props.onRequestUpload}
         >{
-          `Add your own images or videos`
+          'Add your own images or videos'
         }</button>
       </div>
     );

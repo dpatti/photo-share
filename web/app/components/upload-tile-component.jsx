@@ -10,9 +10,13 @@ export class UploadTileComponent extends React.Component {
   render() {
     return (
       <div className='upload-tile'>
-        <a href={this.props.upload.fileUrl} target='_blank'>
+        <a
+          href={this.props.upload.fileUrl}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           {
-            (this.props.upload.type == 'image')
+            (this.props.upload.type === 'image')
               ? this.renderAsImage()
               : this.renderAsVideo()
           }

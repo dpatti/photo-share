@@ -33,6 +33,7 @@ export class AlbumComponent extends React.Component {
   handleScroll(e: Event) {
     // TODO: Probably just replace this with some actual infinite scrolling
     // implementation
+    // eslint-disable-next-line flowtype/no-weak-types
     const el = (e.target: any);
     if (el.scrollTop + el.clientHeight >= 0.9 * el.scrollHeight && this.state.hasMore) {
       this.loadMore();

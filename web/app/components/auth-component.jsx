@@ -45,7 +45,7 @@ export class AuthComponent extends React.Component {
   render() {
     return (
       <div className='auth'>
-        <p className='auth__message'>{`Hey there, what's the password?`}</p>
+        <p className='auth__message'>{"Hey there, what's the password?"}</p>
         <form
           onSubmit={e => {
             e.preventDefault();
