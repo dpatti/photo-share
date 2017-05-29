@@ -9,7 +9,7 @@ const Upload = exports.Upload = database.define('upload', {
   filename: {type: Sequelize.STRING, allowNull: false},
   type: {type: Sequelize.ENUM('image', 'video'), allowNull: false},
   uploader: {type: Sequelize.STRING, allowNull: false},
-  fileUrl: {type: Sequelize.STRING, allowNull: false},
+  fileUrl: {type: Sequelize.STRING, allowNull: false, unique: true},
   previewUrl: {type: Sequelize.STRING, null: true},
 }, {
   timestamps: true,
@@ -22,8 +22,10 @@ const mimeMap: Keyed<UploadType> = {
   'image/jpeg': 'image',
   'image/png': 'image',
 
+  'video/mp4': 'video',
   'video/mpeg': 'video',
   'video/ogg': 'video',
+  'video/quicktime': 'video',
   'video/webm': 'video',
 };
 

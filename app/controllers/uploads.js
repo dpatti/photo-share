@@ -29,10 +29,15 @@ exports.create =
     }
 
     const file = await StoredFile.fromLocal(files.uploadFile);
+    const type = Upload.inferType(file.mimeType());
+
+    if (type == null) {
+      return context.throw(422, "File type not supported");
+    }
 
     const upload = Upload.build({
       filename: file.filename,
-      type: Upload.inferType(file.mimeType()),
+      type: type,
       uploader: fields.uploader,
       fileUrl: file.remoteUrl().href,
     });
