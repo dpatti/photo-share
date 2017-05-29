@@ -67,7 +67,7 @@ export class UploaderComponent extends React.Component {
     }));
   }
 
-  createUpload(file: File): XMLHttpRequest {
+  createUpload(file: File): UploadProgress {
     var data = new FormData();
     data.append('uploadFile', file);
     data.append('uploader', this.state.uploader);
@@ -75,14 +75,15 @@ export class UploaderComponent extends React.Component {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/uploads', true);
     xhr.setRequestHeader('Authorization', `Bearer ${this.props.auth}`);
+
+    const progress = new UploadProgress(file, xhr);
     xhr.send(data);
 
-    return xhr;
+    return progress;
   }
 
   startUpload(file: File): UploadProgress {
-    const xhr = this.createUpload(file);
-    const progress = new UploadProgress(file, xhr);
+    const progress = this.createUpload(file);
 
     progress.finished.catch(err => {
       this.addError(err);
