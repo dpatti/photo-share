@@ -24,7 +24,7 @@ exports.optional =
 exports.variable = (name: string) => (env: Env) => env[name];
 
 exports.computed =
-  (names: Array<string>, f: <T>(Array<?string>) => T) =>
+  <T>(names: Array<string>, f: (Array<?string>) => T) =>
     (env: Env) =>
       f(map(names, propertyOf(env)));
 

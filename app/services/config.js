@@ -27,4 +27,8 @@ module.exports = fromEnv({
     key: required(variable('STORAGE_KEY')),
     secret: required(variable('STORAGE_SECRET')),
   },
+  web: {
+    // TODO: Cast to a boolean
+    devServer: optional(variable('WEB_DEV_SERVER'), false),
+  },
 }, process.env);
