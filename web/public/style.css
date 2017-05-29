@@ -12,9 +12,8 @@ a, a:visited, a:active {
 }
 
 #stage {
-  padding: 1em;
   height: 100vh;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .button {
@@ -53,26 +52,26 @@ a, a:visited, a:active {
     font-size: 0.5em;
   }
 
+.album {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.options {
+  font-size: 2em;
+  margin: 0.5em;
+}
+
 .upload-collection {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  overflow-y: auto;
 }
-
-.album {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.options {
-  font-size: 2em;
-}
-
-  .options__upload {
-  }
 
 .upload-tile {
   width: 250px;

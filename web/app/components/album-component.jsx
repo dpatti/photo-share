@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {uniqBy} from 'lodash';
+import {throttle, uniqBy} from 'lodash';
 import {Upload} from 'app/models/upload';
 import {OptionsComponent} from 'app/components/options-component';
 import {UploaderComponent} from 'app/components/uploader-component';
@@ -28,6 +28,15 @@ export class AlbumComponent extends React.Component {
 
   componentWillMount() {
     this.loadMore();
+  }
+
+  handleScroll(e: Event) {
+    // TODO: Probably just replace this with some actual infinite scrolling
+    // implementation
+    const el = (e.target: any);
+    if (el.scrollTop + el.clientHeight >= 0.9 * el.scrollHeight && this.state.hasMore) {
+      this.loadMore();
+    }
   }
 
   loadMore() {
@@ -72,16 +81,14 @@ export class AlbumComponent extends React.Component {
 
   renderAlbum() {
     return (
-      <div className='album'>
+      <div
+        className='album'
+        onScroll={throttle(e => this.handleScroll(e), 100, {trailing: false})}
+      >
         <OptionsComponent
           onRequestUpload={() => { this.setState({isUploading: true}); }}
         />
         <UploadCollectionComponent uploads={this.state.loaded} />
-        {
-          this.state.hasMore
-            ? <button onClick={_ => this.loadMore()}>Load more</button>
-            : null
-        }
       </div>
     );
   }
