@@ -19,6 +19,7 @@ type PutParams = {|
   path: string,
   source: stream$Readable,
   contentType: string,
+  cacheControl: string,
 |};
 
 type PutResult = {|
@@ -33,6 +34,7 @@ exports.put = (client: Client, params: PutParams): Promise<PutResult> =>
       Key: params.path.slice(1),
       Body: params.source,
       ContentType: params.contentType,
+      CacheControl: params.cacheControl,
     },
     service: client,
   }).promise().then(result => ({

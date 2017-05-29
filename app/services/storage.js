@@ -13,6 +13,8 @@ const {PREVIEW_MIME_TYPE, generate} = require('app/services/previewer');
 const {fromStream} = require('app/util/promise');
 const s3 = require('app/util/s3');
 
+const CACHE_CONTROL_PUBLIC = `public, max-age=${365 * 24 * 60 * 60}`;
+
 const s3Client = s3.createClient({
   key: config.key,
   secret: config.secret,
@@ -86,6 +88,7 @@ exports.put = (file: StoredFile) =>
     path: file.remoteUrl().pathname,
     source: file.read(),
     contentType: file.mimeType(),
+    cacheControl: CACHE_CONTROL_PUBLIC,
   });
 
 exports.putPreview = (file: StoredFile) =>
@@ -94,4 +97,5 @@ exports.putPreview = (file: StoredFile) =>
     path: file.previewUrl().pathname,
     source: file.generatePreview(),
     contentType: PREVIEW_MIME_TYPE,
+    cacheControl: CACHE_CONTROL_PUBLIC,
   });
