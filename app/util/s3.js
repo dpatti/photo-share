@@ -21,7 +21,12 @@ type PutParams = {|
   contentType: string,
 |};
 
-exports.put = (client: Client, params: PutParams) =>
+type PutResult = {|
+  url: string,
+  etag: string,
+|};
+
+exports.put = (client: Client, params: PutParams): Promise<PutResult> =>
   new S3.ManagedUpload({
     params: {
       Bucket: params.bucket,

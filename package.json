@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "db-sync": "bin/run db-sync",
-    "lint": "eslint app/**/*.js web/app/**/*.js",
+    "lint": "eslint app/**/*.js scripts/**/*.js web/app/**/*.js",
     "repl": "bin/node",
     "start": "bin/run start",
     "test": "yarn run lint; yarn run typecheck",
@@ -17,6 +17,8 @@
     "aws-sdk": "^2.55.0",
     "bluebird": "^3.5.0",
     "dotenv": "^4.0.0",
+    "gm": "^1.23.0",
+    "highland": "^2.10.5",
     "jsonwebtoken": "^7.4.0",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",

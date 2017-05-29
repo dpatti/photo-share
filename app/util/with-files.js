@@ -22,6 +22,9 @@ module.exports = (handler: Handler): Middleware =>
     const {files, fields} = await busboy(context.req);
     const indexedFiles = keyBy(files, 'fieldname');
 
-    await handler(context, {files: indexedFiles, fields}, next);
-    await Promise.all(files.map(file => unlink(file.path)));
+    try {
+      await handler(context, {files: indexedFiles, fields}, next);
+    } finally {
+      await Promise.all(files.map(file => unlink(file.path)));
+    }
   };

@@ -7,7 +7,9 @@ const {URL} = require('url');
 const {last} = require('lodash');
 const {lookup} = require('mime-types');
 const request = require('request');
+
 const {storage: config} = require('./config');
+const {PREVIEW_MIME_TYPE, generate} = require('app/services/previewer');
 const {fromStream} = require('app/util/promise');
 const s3 = require('app/util/s3');
 
@@ -68,16 +70,28 @@ class StoredFile {
     return this.source();
   }
 
+  generatePreview(): stream$Readable {
+    return generate(this.read(), this.mimeType());
+  }
+
   _urlFor(filename: string): URL {
     return new URL(s3Url(config.bucket, join(config.namespace, this.hash, filename)));
   }
 }
 exports.StoredFile = StoredFile;
 
-exports.put = (file: StoredFile): Promise<void> =>
+exports.put = (file: StoredFile) =>
   s3.put(s3Client, {
     bucket: config.bucket,
     path: file.remoteUrl().pathname,
     source: file.read(),
     contentType: file.mimeType(),
+  });
+
+exports.putPreview = (file: StoredFile) =>
+  s3.put(s3Client, {
+    bucket: config.bucket,
+    path: file.previewUrl().pathname,
+    source: file.generatePreview(),
+    contentType: PREVIEW_MIME_TYPE,
   });

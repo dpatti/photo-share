@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 const database = require('app/services/database');
 
-type UploadType = 'image' | 'video';
+export type UploadType = 'image' | 'video';
 
 const Upload = exports.Upload = database.define('upload', {
   id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true},
@@ -30,4 +30,4 @@ const mimeMap: Keyed<UploadType> = {
 };
 
 Upload.inferType = (mimeType: string): ?UploadType =>
-  mimeMap[mimeType];
+  mimeMap[mimeType] || null;
