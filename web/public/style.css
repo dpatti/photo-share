@@ -1,0 +1,58 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  line-height: 1.5;
+  color: #24292e;
+}
+
+a, a:visited, a:active {
+  color: initial;
+}
+
+.upload-collection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.upload-tile {
+  width: 250px;
+  max-height: 250px;
+  margin: 40px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upload-tile__preview {
+  max-width: 100%;
+  max-height: 250px;
+}
+
+.upload-tile__video {
+  font-size: 2em;
+  letter-spacing: 2px;
+}
+
+.upload-tile__uploader {
+  font-size: 0.85em;
+  color: #777;
+}
+
+.uploader__back {
+  display: block;
+  margin: 10px;
+}
+
+.uploader__name {
+  display: block;
+  margin: 10px;
+}
+
+.uploader__form {
+  margin: 10px;
+}

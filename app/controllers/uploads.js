@@ -1,9 +1,13 @@
 // @flow
 import type {Context} from 'koa';
 
+const compose = require('koa-compose');
+const {UniqueConstraintError} = require('sequelize');
+
 const {Upload} = require('app/models');
 
 const {StoredFile, put} = require('app/services/storage');
+const catching = require('app/util/catching');
 const respond = require('app/util/respond');
 const withFiles = require('app/util/with-files');
 
@@ -18,7 +22,10 @@ exports.index = async (context: Context) => {
   respond(context, uploads);
 };
 
-exports.create =
+exports.create = compose([
+  catching(UniqueConstraintError, async (context: Context) => {
+    context.throw(409, 'That image was already uploaded');
+  }),
   withFiles(async (context, {files, fields}) => {
     if (!files.uploadFile) {
       return context.throw(422, "File 'uploadFile' missing");
@@ -32,15 +39,23 @@ exports.create =
     const type = Upload.inferType(file.mimeType());
 
     if (type == null) {
-      return context.throw(422, "File type not supported");
+      return context.throw(422, 'File type not supported');
     }
 
     const upload = Upload.build({
       filename: file.filename,
-      type: type,
+      type,
       uploader: fields.uploader,
       fileUrl: file.remoteUrl().href,
     });
+
+    const existing = await Upload.findOne({
+      where: {fileUrl: upload.fileUrl}
+    });
+
+    if (existing) {
+      return respond(context, existing);
+    }
 
     const err = await upload.validate();
     if (err) {
@@ -50,4 +65,5 @@ exports.create =
     await upload.save();
 
     respond(context, upload);
-  });
+  })
+]);

@@ -117,11 +117,18 @@ export class UploaderComponent extends React.Component {
     return (
       <div>
         <button
+          className='uploader__back'
           disabled={this.state.queue.length > 0}
           onClick={() => { this.props.onDoneUploading(); }}
         >{`Return to album`}</button>
 
-        <label>
+        { this.renderErrors() }
+        { this.renderActiveUploads() }
+        { this.renderQueuedUploads() }
+
+        <label
+          className='uploader__name'
+        >
           {`What's your name?`}
           <input
             type='text'
@@ -130,9 +137,6 @@ export class UploaderComponent extends React.Component {
           />
         </label>
 
-        { this.renderErrors() }
-        { this.renderActiveUploads() }
-        { this.renderQueuedUploads() }
         { this.renderForm() }
       </div>
     );
@@ -170,6 +174,7 @@ export class UploaderComponent extends React.Component {
     if (this.state.uploader) {
       return (
         <form
+          className='uploader__form'
           onSubmit={e => {
             e.preventDefault();
             const form = e.target;
