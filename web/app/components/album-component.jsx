@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
+import {uniqBy} from 'lodash';
 import {Upload} from 'app/models/upload';
 import {OptionsComponent} from 'app/components/options-component';
+import {UploaderComponent} from 'app/components/uploader-component';
 import {UploadCollectionComponent} from 'app/components/upload-collection-component';
 
 export class AlbumComponent extends React.Component {
@@ -12,6 +14,7 @@ export class AlbumComponent extends React.Component {
   state: {
     loaded: Array<Upload>,
     hasMore: boolean,
+    isUploading: boolean,
   };
 
   constructor() {
@@ -19,6 +22,7 @@ export class AlbumComponent extends React.Component {
     this.state = {
       loaded: [],
       hasMore: true,
+      isUploading: false,
     };
   }
 
@@ -37,16 +41,41 @@ export class AlbumComponent extends React.Component {
         : response.text().then(message => Promise.reject(Error(message)))
     ).then(uploads => {
       this.setState({
-        loaded: this.state.loaded.concat(uploads),
+        loaded: uniqBy(this.state.loaded.concat(uploads), 'id'),
         hasMore: uploads.length > 0,
       });
     });
   }
 
+  doneUploading() {
+    this.setState({
+      loaded: [],
+      hasMore: true,
+      isUploading: false,
+    }, () => { this.loadMore(); });
+  }
+
   render() {
+    return (this.state.isUploading)
+      ? this.renderUploader()
+      : this.renderAlbum();
+  }
+
+  renderUploader() {
+    return (
+      <UploaderComponent
+        auth={this.props.auth}
+        onDoneUploading={() => { this.doneUploading(); }}
+      />
+    );
+  }
+
+  renderAlbum() {
     return (
       <div className='album'>
-        <OptionsComponent auth={this.props.auth} />
+        <OptionsComponent
+          onRequestUpload={() => { this.setState({isUploading: true}); }}
+        />
         <UploadCollectionComponent uploads={this.state.loaded} />
         {
           this.state.hasMore
