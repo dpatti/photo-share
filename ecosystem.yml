@@ -1,0 +1,24 @@
+apps:
+  - name: "photo-share:server"
+    cwd: "/www/photo-share"
+    script: "scripts/start.js"
+    exec_interpreter: "bin/node"
+    exec_mode: "fork"
+    autorestart: true
+    env:
+      NODE_ENV: "development"
+    env_production:
+      NODE_ENV: "production"
+
+  - name: "photo-share:generate-previews"
+    cwd: "/www/photo-share"
+    script: "scripts/generate-previews.js"
+    exec_interpreter: "bin/node"
+    exec_mode: "fork"
+    autorestart: true
+    env:
+      NODE_ENV: "development"
+      PROCESS_CONCURRENCY: 1
+    env_production:
+      NODE_ENV: "production"
+      PROCESS_CONCURRENCY: 2
