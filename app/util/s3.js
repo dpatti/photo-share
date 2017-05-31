@@ -31,7 +31,7 @@ exports.put = (client: Client, params: PutParams): Promise<PutResult> =>
   new S3.ManagedUpload({
     params: {
       Bucket: params.bucket,
-      Key: params.path.slice(1),
+      Key: decodeURI(params.path.slice(1)),
       Body: params.source,
       ContentType: params.contentType,
       CacheControl: params.cacheControl,
