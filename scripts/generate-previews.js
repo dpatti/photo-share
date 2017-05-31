@@ -12,13 +12,24 @@ const {Upload} = require('app/models');
 const PROCESS_CONCURRENCY = Number(process.env.PROCESS_CONCURRENCY) || os.cpus().length;
 const POLL_DELAY = Number(process.env.POLL_DELAY) || 1000;
 
-const poll = <Obj, Iter>(f: Iter => Promise<[Array<Obj>, Iter]>, init: Iter) => {
-  return highland((async () => {
-    const [items, next] = await f(init);
+const poll = <Obj, Iter>(f: Iter => Promise<[Array<Obj>, Iter]>, iter: Iter) => {
+  return highland((push, next) => {
+    const recurse = async (nextIter) => {
+      await delay(POLL_DELAY);
+      next(poll(f, nextIter));
+    };
 
-    return highland(items).
-      concat(delay(POLL_DELAY).then(_ => poll(f, next)));
-  })()).flatten();
+    (async () => {
+      try {
+        const [items, nextIter] = await f(iter);
+        items.forEach(i => push(null, i));
+        recurse(nextIter);
+      } catch (err) {
+        push(err);
+        recurse(iter);
+      }
+    })();
+  });
 };
 
 const allPreviewless = async (lastId: number): Promise<[Array<Upload>, number]> => {
