@@ -12,7 +12,7 @@ export class UploadProgress extends EventEmitter {
 
     this.identifier = uniqueId();
 
-    xhr.upload.addEventListener('progress', (e: ProgressEvent) => {
+    xhr.addEventListener('progress', (e: ProgressEvent) => {
       if (e.lengthComputable) {
         const percentage = Math.round(100 * e.loaded / e.total);
         this.emit('progress', percentage);

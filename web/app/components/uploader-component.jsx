@@ -44,6 +44,10 @@ export class UploaderComponent extends React.Component {
     }
   }
 
+  canNavigate() {
+    return isEmpty(this.state.queue) && isEmpty(this.state.active);
+  }
+
   checkQueue() {
     this.setState(state => {
       if (state.errors.length > ERROR_LIMIT) {
@@ -95,6 +99,8 @@ export class UploaderComponent extends React.Component {
     progress.finished.catch(err => {
       this.addError(err);
     }).then(() => {
+      // TODO: don't use setState in a promise without being able to cancel it
+      // to prevent it from finishing after unmount
       this.setState(state => ({
         active: without(state.active, progress),
       }));
@@ -153,7 +159,7 @@ export class UploaderComponent extends React.Component {
       <div className='uploader'>
         <button
           className='uploader__back button'
-          disabled={this.state.queue.length > 0}
+          disabled={!this.canNavigate()}
           onClick={() => { this.props.onDoneUploading(); }}
         >{'Return to album'}</button>
 

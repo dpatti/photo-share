@@ -27,7 +27,8 @@ a, a:visited, a:active {
   font-weight: bold;
 }
 
-  .button:hover {
+  .button:disabled {
+    background-color: #ccc;
   }
 
 .auth {
@@ -77,7 +78,7 @@ a, a:visited, a:active {
 .upload-tile {
   width: 250px;
   max-height: 250px;
-  margin: 40px;
+  margin: 20px;
 
   display: flex;
   flex-direction: column;
@@ -165,8 +166,4 @@ a, a:visited, a:active {
     font-size: 2em;
     margin: 0.25em;
     background-color: #22dd66;
-  }
-
-  .uploader__submit:disabled {
-    background-color: #ccc;
   }
