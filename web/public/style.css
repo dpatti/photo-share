@@ -24,6 +24,7 @@ a, a:visited, a:active {
   background-color: #236499;
   font-size: inherit;
   cursor: pointer;
+  font-weight: bold;
 }
 
   .button:hover {
@@ -125,4 +126,47 @@ a, a:visited, a:active {
   .uploader__form {
     margin: 10px;
     flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .uploader__file-label {
+    flex-grow: 1;
+    cursor: pointer;
+    width: 75vw;
+    border: 3px dashed;
+    border-radius: 1em;
+    margin: 0.25em;
+    padding: 1em;
+    font-size: 2em;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .uploader__file-label--dropping {
+    border: 3px dashed #a0a0a0;
+    color: #a0a0a0;
+  }
+
+  .uploader__file-input {
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+    z-index: -100;
+    overflow: hidden;
+  }
+
+  .uploader__submit {
+    font-size: 2em;
+    margin: 0.25em;
+    background-color: #22dd66;
+  }
+
+  .uploader__submit:disabled {
+    background-color: #ccc;
   }

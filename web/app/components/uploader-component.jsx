@@ -1,6 +1,7 @@
 // @flow
+import classNames from 'classnames';
 import React from 'react';
-import {first, without} from 'lodash';
+import {first, isEmpty, without} from 'lodash';
 
 import {UploadProgress} from 'app/models/upload-progress';
 import {UploadProgressComponent} from './upload-progress-component';
@@ -9,6 +10,8 @@ const UPLOAD_CONCURRENCY = 4;
 const ERROR_LIMIT = 5;
 
 export class UploaderComponent extends React.Component {
+  form: HTMLFormElement;
+
   props: {
     auth: string,
     onDoneUploading: () => void,
@@ -16,18 +19,22 @@ export class UploaderComponent extends React.Component {
 
   state: {
     uploader: string,
-    active: Array<UploadProgress>,
-    queue: Array<File>,
     errors: Array<Error>,
+    dropActive: boolean,
+    staged: Array<File>,
+    queue: Array<File>,
+    active: Array<UploadProgress>,
   };
 
   constructor() {
     super();
     this.state = {
       uploader: localStorage.getItem('uploader') || '',
-      active: [],
-      queue: [],
       errors: [],
+      dropActive: false,
+      staged: [],
+      queue: [],
+      active: [],
     };
   }
 
@@ -96,22 +103,49 @@ export class UploaderComponent extends React.Component {
     return progress;
   }
 
-  enqueue(fileList: FileList) {
-    return new Promise(resolve => {
-      this.setState(state => {
-        const files = Array.from(fileList);
-        resolve();
-
-        return {
-          queue: state.queue.concat(files),
-        };
-      });
-    });
+  enqueueAll() {
+    this.setState(state => ({
+      queue: state.queue.concat(state.staged),
+      staged: [],
+    }));
   }
 
   setUploader(uploader: string) {
     localStorage.setItem('uploader', uploader);
     this.setState({uploader});
+  }
+
+  selectFiles(fileInput: HTMLInputElement) {
+    const files = Array.from(fileInput.files);
+
+    new Promise(resolve => {
+      this.setState(state => {
+        resolve();
+
+        return {
+          staged: state.staged.concat(files),
+        };
+      });
+    }).then(() => {
+      this.form.reset();
+    });
+  }
+
+  toggleDropActive(dropActive: boolean) {
+    if (this.state.dropActive !== dropActive) {
+      this.setState({dropActive});
+    }
+  }
+
+  dropFiles(e: DragEvent) {
+    e.preventDefault();
+
+    if (e.dataTransfer && e.dataTransfer.files) {
+      const files = Array.from(e.dataTransfer.files);
+      this.setState(state => ({
+        staged: state.staged.concat(files),
+      }));
+    }
   }
 
   render() {
@@ -127,9 +161,7 @@ export class UploaderComponent extends React.Component {
         { this.renderActiveUploads() }
         { this.renderQueuedUploads() }
 
-        <label
-          className='uploader__name-label'
-        >
+        <label className='uploader__name-label'>
           {"What's your name?"}
           <input
             className='uploader__name-input'
@@ -177,15 +209,47 @@ export class UploaderComponent extends React.Component {
       return (
         <form
           className='uploader__form'
+          ref={form => { this.form = form; }}
           onSubmit={e => {
             e.preventDefault();
-            const form = e.target;
-            this.enqueue(form.elements.namedItem('uploads').files).
-              then(() => form.reset());
+            this.enqueueAll();
           }}
         >
-          <input type='file' name='uploads' multiple></input>
-          <input type='submit' value='Begin upload'></input>
+          <label
+            className={classNames('uploader__file-label', {
+              'uploader__file-label--dropping': this.state.dropActive,
+            })}
+            onDragOver={e => {
+              e.preventDefault();
+              this.toggleDropActive(true);
+            }}
+            onDragLeave={_ => { this.toggleDropActive(false); }}
+            onDrop={e => {
+              this.toggleDropActive(false);
+              this.dropFiles(e);
+            }}
+          >
+            {
+              (this.state.staged.length > 0)
+                ? <p>{`${this.state.staged.length} file(s) selected`}</p>
+                : null
+            }
+            <p>{'Drag files here to upload or click to select'}</p>
+            <input
+              className='uploader__file-input'
+              type='file'
+              name='uploads'
+              onChange={e => this.selectFiles(e.target)}
+              multiple
+            ></input>
+          </label>
+
+          <input
+            className='uploader__submit button'
+            type='submit'
+            value='Begin upload'
+            disabled={isEmpty(this.state.staged)}
+          ></input>
         </form>
       );
     }
