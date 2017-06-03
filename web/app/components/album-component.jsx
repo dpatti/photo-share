@@ -5,6 +5,7 @@ import {Upload} from 'app/models/upload';
 import {OptionsComponent} from 'app/components/options-component';
 import {UploaderComponent} from 'app/components/uploader-component';
 import {UploadCollectionComponent} from 'app/components/upload-collection-component';
+import {GalleryComponent} from 'app/components/gallery-component';
 
 export class AlbumComponent extends React.Component {
   props: {
@@ -15,6 +16,7 @@ export class AlbumComponent extends React.Component {
     loaded: Array<Upload>,
     hasMore: boolean,
     isUploading: boolean,
+    activeImage: ?number,
   };
 
   constructor() {
@@ -23,6 +25,7 @@ export class AlbumComponent extends React.Component {
       loaded: [],
       hasMore: true,
       isUploading: false,
+      activeImage: null,
     };
   }
 
@@ -65,6 +68,14 @@ export class AlbumComponent extends React.Component {
     }, () => { this.loadMore(); });
   }
 
+  gallerySwitch(activeImage: ?number) {
+    this.setState({activeImage});
+
+    if (this.state.hasMore && activeImage === this.state.loaded.length - 1) {
+      this.loadMore();
+    }
+  }
+
   render() {
     return (this.state.isUploading)
       ? this.renderUploader()
@@ -89,7 +100,20 @@ export class AlbumComponent extends React.Component {
         <OptionsComponent
           onRequestUpload={() => { this.setState({isUploading: true}); }}
         />
-        <UploadCollectionComponent uploads={this.state.loaded} />
+        <UploadCollectionComponent
+          uploads={this.state.loaded}
+          onSelectUpload={i => this.gallerySwitch(i)}
+        />
+        {
+          (this.state.activeImage == null)
+            ? null
+            : <GalleryComponent
+                activeUpload={this.state.loaded[this.state.activeImage]}
+                index={this.state.activeImage}
+                total={this.state.loaded.length}
+                onGallerySwitch={i => this.gallerySwitch(i)}
+              />
+        }
       </div>
     );
   }

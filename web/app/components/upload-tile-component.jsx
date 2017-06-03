@@ -2,10 +2,23 @@
 import React from 'react';
 import {Upload} from 'app/models/upload';
 
+const RIGHT_CLICK_EVENT = 2;
+
 export class UploadTileComponent extends React.Component {
   props: {
     upload: Upload,
+    onSelect: () => void,
   };
+
+  decideClick(e: MouseEvent) {
+    const newTab =
+      e.which === RIGHT_CLICK_EVENT || e.metaKey || e.ctrlKey;
+
+    if (!newTab) {
+      e.preventDefault();
+      this.props.onSelect();
+    }
+  }
 
   render() {
     return (
@@ -14,6 +27,7 @@ export class UploadTileComponent extends React.Component {
           href={this.props.upload.fileUrl}
           target='_blank'
           rel='noopener noreferrer'
+          onClick={e => this.decideClick(e)}
         >
           {
             (this.props.upload.type === 'image')
