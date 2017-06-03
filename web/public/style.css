@@ -106,6 +106,7 @@ a, a:visited, a:active {
   background-color: rgba(0,0,0,.85);
   width: 100%;
   height: 100%;
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;
@@ -151,15 +152,38 @@ a, a:visited, a:active {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
   }
 
 .gallery-upload {
   color: #fff;
+  height: 100%;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+
+  .gallery-upload__link {
+    /* TODO: I don't know how to get images to respect their flex container.
+     * Even though this container is a flex column, without some other
+     * machinery, the image will only constrain itself by max width and push the
+     * text off screen. By specifying the `flex-basis` as 100% here, this link
+     * image container will not overflow the .gallery-upload container, which
+     * also must specify a height. Then we use `overflow: hidden` to make sure
+     * that the uploader text fits on the screen, since 100% would otherwise
+     * push it off. The downside of fixing the height at 100% means that the
+     * uploader text will always be pushed to the bottom, regardless of how big
+     * the image is. Since we're usually displaying photos, that should be a
+     * reasonable tradeoff. */
+    flex: 0 1 100%;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   .gallery-upload__preview {
     max-width: 100%;
