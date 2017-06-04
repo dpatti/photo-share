@@ -151,6 +151,7 @@ a, a:visited, a:active {
 
   .gallery__image {
     flex: 8;
+    position: relative;
 
     display: flex;
     justify-content: center;
@@ -160,6 +161,7 @@ a, a:visited, a:active {
 
 .gallery-upload {
   color: #fff;
+  position: absolute;
   height: 100%;
 
   display: flex;
