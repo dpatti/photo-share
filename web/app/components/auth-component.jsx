@@ -57,6 +57,9 @@ export class AuthComponent extends React.Component {
             name='password'
             type='text'
             autoComplete='off'
+            autoCorrect='off'
+            autoCapitalize='off'
+            spellCheck='false'
             disabled={this.state.loading}
           ></input>
           <input
