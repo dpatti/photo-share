@@ -3,7 +3,12 @@ const path = require('path');
 module.exports = {
   context: __dirname,
   entry: {
-    app: ['whatwg-fetch', './app/index'],
+    app: [
+      'es6-shim',
+      'es7-shim',
+      'whatwg-fetch',
+      './app/index'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
