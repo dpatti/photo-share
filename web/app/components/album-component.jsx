@@ -97,13 +97,6 @@ export class AlbumComponent extends React.Component {
         className='album'
         onScroll={throttle(e => this.handleScroll(e), 100, {trailing: false})}
       >
-        <OptionsComponent
-          onRequestUpload={() => { this.setState({isUploading: true}); }}
-        />
-        <UploadCollectionComponent
-          uploads={this.state.loaded}
-          onSelectUpload={i => this.gallerySwitch(i)}
-        />
         {
           (this.state.activeImage == null)
             ? null
@@ -114,6 +107,13 @@ export class AlbumComponent extends React.Component {
                 onGallerySwitch={i => this.gallerySwitch(i)}
               />
         }
+        <OptionsComponent
+          onRequestUpload={() => { this.setState({isUploading: true}); }}
+        />
+        <UploadCollectionComponent
+          uploads={this.state.loaded}
+          onSelectUpload={i => this.gallerySwitch(i)}
+        />
       </div>
     );
   }
