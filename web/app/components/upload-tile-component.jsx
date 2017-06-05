@@ -24,6 +24,7 @@ export class UploadTileComponent extends React.Component {
     return (
       <div className='upload-tile'>
         <a
+          className='upload-tile__link'
           href={this.props.upload.fileUrl}
           target='_blank'
           rel='noopener noreferrer'
@@ -42,7 +43,7 @@ export class UploadTileComponent extends React.Component {
 
   renderAsImage() {
     return <img
-      className='upload-tile__preview'
+      className='upload-tile__image'
       src={this.props.upload.previewUrl || this.props.upload.fileUrl}
     />;
   }
