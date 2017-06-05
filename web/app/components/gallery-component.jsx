@@ -73,7 +73,7 @@ export class GalleryComponent extends React.Component {
             onClick={() => this.navigate('back')}
           >&lt;</button>
 
-          <div className='gallery__image'>
+          <div className='gallery__upload'>
             <GalleryUploadComponent
               upload={this.props.activeUpload}
             />

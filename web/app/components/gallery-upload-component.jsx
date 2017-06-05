@@ -7,7 +7,7 @@ export class GalleryUploadComponent extends React.Component {
     upload: Upload,
   };
 
-  imageSource() {
+  imageSource(): string {
     return this.props.upload.galleryUrl || this.props.upload.fileUrl;
   }
 
@@ -35,11 +35,13 @@ export class GalleryUploadComponent extends React.Component {
 
   renderAsImage() {
     return (
-      <img
-        className='gallery-upload__preview'
+      <div
+        className='gallery-upload__image'
         key={this.imageSource()}
-        src={this.imageSource()}
-      />
+        style={{
+          backgroundImage: `url("${this.imageSource()}")`,
+        }}
+      ></div>
     );
   }
 

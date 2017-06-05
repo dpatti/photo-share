@@ -7,5 +7,6 @@ export class Upload {
   type: UploadType;
   uploader: string;
   fileUrl: string;
-  previewUrl: string;
+  previewUrl: ?string;
+  galleryUrl: ?string;
 }

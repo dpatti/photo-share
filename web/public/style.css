@@ -149,59 +149,52 @@ a, a:visited, a:active {
     flex: 1;
   }
 
-  .gallery__image {
+  .gallery__upload {
     flex: 8;
-    position: relative;
 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     flex-direction: column;
   }
 
 .gallery-upload {
+  flex: 1;
   color: #fff;
-  position: absolute;
-  height: 100%;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 
   .gallery-upload__link {
-    /* TODO: I don't know how to get images to respect their flex container.
-     * Even though this container is a flex column, without some other
-     * machinery, the image will only constrain itself by max width and push the
-     * text off screen. By specifying the `flex-basis` as 100% here, this link
-     * image container will not overflow the .gallery-upload container, which
-     * also must specify a height. Then we use `overflow: hidden` to make sure
-     * that the uploader text fits on the screen, since 100% would otherwise
-     * push it off. The downside of fixing the height at 100% means that the
-     * uploader text will always be pushed to the bottom, regardless of how big
-     * the image is. Since we're usually displaying photos, that should be a
-     * reasonable tradeoff. */
-    flex: 0 1 100%;
-    overflow: hidden;
+    flex: 1;
+
+    display: flex;
+  }
+
+  .gallery-upload__image {
+    flex: 1;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  .gallery-upload__video {
+    flex: 1;
+    font-size: 4em;
 
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .gallery-upload__preview {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  .gallery-upload__video {
-    font-size: 4em;
   }
 
   .gallery-upload__uploader {
     color: #fff;
     font-weight: bold;
+    text-align: center;
+    padding: 1em;
   }
 
 .uploader {
