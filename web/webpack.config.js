@@ -7,6 +7,7 @@ module.exports = {
       'es6-shim',
       'es7-shim',
       'whatwg-fetch',
+      'babel-polyfill',
       './app/index'
     ],
   },

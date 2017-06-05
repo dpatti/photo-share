@@ -1,8 +1,10 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import {first, isEmpty, without} from 'lodash';
+import {first, isEmpty, map, partition, uniq, without} from 'lodash';
+import {extname} from 'path';
 
+import {Upload} from 'app/models/upload';
 import {UploadProgress} from 'app/models/upload-progress';
 import {UploadProgressComponent} from './upload-progress-component';
 
@@ -109,6 +111,30 @@ export class UploaderComponent extends React.Component {
     return progress;
   }
 
+  async stageFiles(files: Array<File>) {
+    const [valid, invalid] =
+      partition(files, f => Upload.isValidExtension(f.name));
+
+    const invalidExtensions =
+      uniq(map(invalid, f => extname(f.name))).join(', ');
+
+    const groupedInvalid =
+      isEmpty(invalidExtensions)
+        ? []
+        : Error(`You can't upload files with extension(s) ${invalidExtensions}`);
+
+    return new Promise(resolve => {
+      this.setState(state => {
+        resolve();
+
+        return {
+          staged: state.staged.concat(valid),
+          errors: state.errors.concat(groupedInvalid),
+        };
+      });
+    });
+  }
+
   enqueueAll() {
     this.setState(state => ({
       queue: state.queue.concat(state.staged),
@@ -121,20 +147,11 @@ export class UploaderComponent extends React.Component {
     this.setState({uploader});
   }
 
-  selectFiles(fileInput: HTMLInputElement) {
+  async selectFiles(fileInput: HTMLInputElement) {
     const files = Array.from(fileInput.files);
 
-    new Promise(resolve => {
-      this.setState(state => {
-        resolve();
-
-        return {
-          staged: state.staged.concat(files),
-        };
-      });
-    }).then(() => {
-      this.form.reset();
-    });
+    await this.stageFiles(files);
+    this.form.reset();
   }
 
   toggleDropActive(dropActive: boolean) {
@@ -148,9 +165,7 @@ export class UploaderComponent extends React.Component {
 
     if (e.dataTransfer && e.dataTransfer.files) {
       const files = Array.from(e.dataTransfer.files);
-      this.setState(state => ({
-        staged: state.staged.concat(files),
-      }));
+      this.stageFiles(files);
     }
   }
 
@@ -183,7 +198,7 @@ export class UploaderComponent extends React.Component {
   }
 
   renderErrors() {
-    return this.state.errors.map((error, i) =>
+    return map(this.state.errors, (error, i) =>
       <p key={i}>{`Error: ${error.message}`}</p>
     );
   }
@@ -192,7 +207,7 @@ export class UploaderComponent extends React.Component {
     if (this.state.active.length > 0) {
       return (
         <ul>{
-          this.state.active.map(progress =>
+          map(this.state.active, progress =>
             <li key={progress.identifier}>
               <UploadProgressComponent
                 uploadProgress={progress}
