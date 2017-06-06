@@ -1,15 +1,20 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import {first, isEmpty, map, partition, uniq, without} from 'lodash';
+import {first, isEmpty, flatMap, map, partition, uniq, without} from 'lodash';
 import {extname} from 'path';
 
 import {Upload} from 'app/models/upload';
 import {UploadProgress} from 'app/models/upload-progress';
+import objectKeyStore from 'app/util/object-key-store';
+
 import {UploadProgressComponent} from './upload-progress-component';
+import {ErrorListComponent} from './error-list-component';
 
 const UPLOAD_CONCURRENCY = 4;
-const ERROR_LIMIT = 5;
+const ERROR_LIMIT = 3;
+
+const progressKey = objectKeyStore();
 
 export class UploaderComponent extends React.Component {
   form: HTMLFormElement;
@@ -169,6 +174,14 @@ export class UploaderComponent extends React.Component {
     }
   }
 
+  spliceError(target: Error, replacements: Array<Error>) {
+    this.setState(state => ({
+      errors: flatMap(state.errors, error =>
+        (error === target) ? replacements : [error]
+      ),
+    }));
+  }
+
   render() {
     return (
       <div className='uploader'>
@@ -198,17 +211,23 @@ export class UploaderComponent extends React.Component {
   }
 
   renderErrors() {
-    return map(this.state.errors, (error, i) =>
-      <p key={i}>{`Error: ${error.message}`}</p>
-    );
+    if (!isEmpty(this.state.errors)) {
+      return (
+        <ErrorListComponent
+          errors={this.state.errors}
+          onReplace={(a, b) => { this.spliceError(a, [b]); }}
+          onDismiss={(err) => { this.spliceError(err, []); }}
+        />
+      );
+    }
   }
 
   renderActiveUploads() {
-    if (this.state.active.length > 0) {
+    if (!isEmpty(this.state.active)) {
       return (
         <ul>{
           map(this.state.active, progress =>
-            <li key={progress.identifier}>
+            <li key={progressKey(progress)}>
               <UploadProgressComponent
                 uploadProgress={progress}
               ></UploadProgressComponent>

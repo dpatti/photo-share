@@ -270,3 +270,28 @@ a, a:visited, a:active {
     margin: 0.25em;
     background-color: #22dd66;
   }
+
+.error-list {
+  padding: 0;
+  margin: 1em 0;
+  list-style: none;
+  width: 75%;
+}
+
+  .error-list__item {
+    display: flex;
+
+    background-color: rgb(255,200,200);
+    padding: 0.2em;
+    margin: 0.2em;
+    border: 0.1em solid rgb(255, 100, 100);
+    border-radius: 0.5em;
+  }
+
+  .error-list__item-message {
+    flex: auto;
+  }
+
+  .error-list__item-button {
+    flex: none;
+  }
