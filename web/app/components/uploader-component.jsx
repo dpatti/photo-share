@@ -4,6 +4,8 @@ import React from 'react';
 import {first, isEmpty, flatMap, map, partition, uniq, without} from 'lodash';
 import {extname} from 'path';
 
+import {NetworkError} from 'app/models/network-error';
+import {RetryableError} from 'app/models/retryable-error';
 import {Upload} from 'app/models/upload';
 import {UploadProgress} from 'app/models/upload-progress';
 import objectKeyStore from 'app/util/object-key-store';
@@ -104,7 +106,11 @@ export class UploaderComponent extends React.Component {
     const progress = this.createUpload(file);
 
     progress.finished.catch(err => {
-      this.addError(err);
+      this.addError(
+        (err instanceof NetworkError)
+          ? RetryableError.from(err, () => this.retryUpload(file))
+          : err
+      );
     }).then(() => {
       // TODO: don't use setState in a promise without being able to cancel it
       // to prevent it from finishing after unmount
@@ -114,6 +120,24 @@ export class UploaderComponent extends React.Component {
     });
 
     return progress;
+  }
+
+  retryUpload(file: File) {
+    return new Promise((resolve, reject) => {
+      try {
+        const retry = this.startUpload(file);
+
+        this.setState(state => {
+          resolve();
+
+          return {
+            active: state.active.concat(retry),
+          };
+        });
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
 
   async stageFiles(files: Array<File>) {

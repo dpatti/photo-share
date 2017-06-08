@@ -1,6 +1,7 @@
 // @flow
 import EventEmitter from 'events';
 import {inRange} from 'lodash';
+import {NetworkError} from 'app/models/network-error';
 
 export class UploadProgress extends EventEmitter {
   filename: string;
@@ -19,19 +20,22 @@ export class UploadProgress extends EventEmitter {
     this.filename = file.name;
     this.finished = new Promise((resolve, reject) => {
       xhr.addEventListener('error', (_e: ProgressEvent) => {
-        reject(this.error('network failure'));
+        reject(this.error(NetworkError, 'network failure'));
       });
       xhr.addEventListener('load', (_e: ProgressEvent) => {
         if (inRange(xhr.status, 200, 300)) {
           resolve();
         } else {
-          reject(this.error(`${xhr.response} (${xhr.status})`));
+          reject(this.error(
+            inRange(xhr.status, 500, 600) ? NetworkError : Error,
+            `${xhr.response} (${xhr.status})`
+          ));
         }
       });
     });
   }
 
-  error(message: string): Error {
-    return Error(`Error uploading '${this.filename}': ${message}`);
+  error<T: Error>(ErrorType: Class<T>, message: string): T {
+    return new ErrorType(`Error uploading '${this.filename}': ${message}`);
   }
 }

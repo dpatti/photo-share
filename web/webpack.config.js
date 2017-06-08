@@ -29,7 +29,11 @@ module.exports = {
           'react',
           'stage-0',
         ],
-        plugins: [],
+        plugins: [
+          ['babel-plugin-transform-builtin-extend', {
+              globals: ['Error', 'Array']
+          }],
+        ],
       },
     }]
   },
