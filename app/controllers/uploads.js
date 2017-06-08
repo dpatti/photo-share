@@ -13,7 +13,10 @@ const withFiles = require('app/util/with-files');
 
 exports.index = async (context: Context) => {
   const from = context.request.query.from || 0;
+  const by = context.request.query.by;
+
   const uploads = await Upload.findAll({
+    where: Upload.whereUploader(by),
     order: [['createdAt', 'DESC']],
     limit: 20,
     offset: from,

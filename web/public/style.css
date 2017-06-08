@@ -56,21 +56,49 @@ a, a:visited, a:active {
 
 .album {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   height: 100%;
 }
 
 .options {
-  font-size: 2em;
-  margin: 0.5em;
+  flex: 0 10em;
+  margin: 1em;
+
+  display: flex;
+  flex-direction: column;
 }
 
+  .options__upload {
+    font-size: 1.25em;
+  }
+
+  .options__uploaders {
+    list-style: none;
+    padding-left: 1em;
+    margin: 0;
+    border-left: 1px solid #236499;
+  }
+
+  .options__uploader {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .options__uploader--active {
+    background-color: #236499;
+    color: #fff;
+  }
+
 .upload-collection {
+  flex: 8;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   flex-wrap: wrap;
   max-width: 100%;
   overflow-y: auto;

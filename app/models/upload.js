@@ -31,3 +31,8 @@ const mimeMap: Keyed<UploadType> = {
 
 Upload.inferType = (mimeType: string): ?UploadType =>
   mimeMap[mimeType] || null;
+
+Upload.whereUploader = (uploader: ?string) =>
+  (uploader)
+    ? Sequelize.where(Sequelize.fn('lower', Sequelize.col('uploader')), uploader)
+    : {};

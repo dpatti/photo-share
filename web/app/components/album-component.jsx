@@ -1,11 +1,14 @@
 // @flow
 import React from 'react';
-import {throttle, uniqBy} from 'lodash';
+import {get as getFrom, throttle, uniqBy} from 'lodash';
 import {Upload} from 'app/models/upload';
+import {Uploader} from 'app/models/uploader';
 import {OptionsComponent} from 'app/components/options-component';
 import {UploaderComponent} from 'app/components/uploader-component';
 import {UploadCollectionComponent} from 'app/components/upload-collection-component';
 import {GalleryComponent} from 'app/components/gallery-component';
+import {get, withAuth, withParams} from 'app/util/api';
+import {fromJSONArray} from 'app/util/from-json';
 
 export class AlbumComponent extends React.Component {
   props: {
@@ -13,24 +16,50 @@ export class AlbumComponent extends React.Component {
   };
 
   state: {
+    // Options
+    uploaders: Array<Uploader>,
+    filterFrom: ?Uploader,
+
+    // Upload View
+    isUploading: boolean,
+
+    // Gallery
+    activeImage: ?number,
+
+    // Album
     loaded: Array<Upload>,
     hasMore: boolean,
-    isUploading: boolean,
-    activeImage: ?number,
   };
 
   constructor() {
     super();
+
     this.state = {
-      loaded: [],
-      hasMore: true,
+      uploaders: [],
+      filterFrom: null,
       isUploading: false,
       activeImage: null,
+      loaded: [],
+      hasMore: true,
     };
   }
 
   componentWillMount() {
-    this.loadMore();
+    this.loadInitial();
+  }
+
+  componentDidUpdate(_: mixed, prevState: $PropertyType<AlbumComponent, 'state'>) {
+    if (this.state.filterFrom !== prevState.filterFrom) {
+      // TODO: This is pretty ugly, and definitely opens us up to a race
+      // condition. We definitely need a sort of async state management that can
+      // simulate switchMap() from rxjs (or just use that? somehow?)
+      this.setState({
+        loaded: [],
+        hasMore: true,
+      }, () => {
+        this.loadMore();
+      });
+    }
   }
 
   handleScroll(e: Event) {
@@ -43,29 +72,44 @@ export class AlbumComponent extends React.Component {
     }
   }
 
-  loadMore() {
-    fetch(`/uploads?from=${this.state.loaded.length}`, {
-      headers: new Headers({
-        authorization: `Bearer ${this.props.auth}`,
-      })
-    }).then(response =>
-      (response.ok)
-        ? response.json()
-        : response.text().then(message => Promise.reject(Error(message)))
-    ).then(uploads => {
-      this.setState({
-        loaded: uniqBy(this.state.loaded.concat(uploads), 'id'),
-        hasMore: uploads.length > 0,
-      });
-    });
-  }
-
-  doneUploading() {
+  loadInitial() {
     this.setState({
+      uploaders: [],
+      filterFrom: null,
       loaded: [],
       hasMore: true,
       isUploading: false,
-    }, () => { this.loadMore(); });
+    }, () => {
+      this.loadUploaders();
+      this.loadMore();
+    });
+  }
+
+  loadUploaders() {
+    get('/uploaders', withAuth(this.props.auth, {})).
+      then(response => {
+        this.setState({
+          uploaders: fromJSONArray(Uploader, response),
+        });
+      });
+  }
+
+  loadMore() {
+    get(
+      withParams('/uploads', {
+        from: String(this.state.loaded.length),
+        by: getFrom(this.state.filterFrom, 'id', ''),
+      }),
+      withAuth(this.props.auth, {})
+    ).
+      then(response => {
+        const uploads = fromJSONArray(Upload, response);
+
+        this.setState({
+          loaded: uniqBy(this.state.loaded.concat(uploads), 'id'),
+          hasMore: uploads.length > 0,
+        });
+      });
   }
 
   gallerySwitch(activeImage: ?number) {
@@ -86,7 +130,7 @@ export class AlbumComponent extends React.Component {
     return (
       <UploaderComponent
         auth={this.props.auth}
-        onDoneUploading={() => { this.doneUploading(); }}
+        onDoneUploading={() => { this.loadInitial(); }}
       />
     );
   }
@@ -108,6 +152,9 @@ export class AlbumComponent extends React.Component {
               />
         }
         <OptionsComponent
+          uploaders={this.state.uploaders}
+          filterFrom={this.state.filterFrom}
+          onRequestFilter={uploader => { this.setState({filterFrom: uploader}); }}
           onRequestUpload={() => { this.setState({isUploading: true}); }}
         />
         <UploadCollectionComponent

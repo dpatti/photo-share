@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import jsonBlob from 'app/util/json-blob';
+import {post} from 'app/util/api';
 
 export class AuthComponent extends React.Component {
   props: {
@@ -23,15 +24,12 @@ export class AuthComponent extends React.Component {
   submitAuth(password: string) {
     this.setState({loading: true});
 
-    fetch('/auth', {
-      method: 'POST',
-      body: jsonBlob({password}),
-    }).then(response =>
-      response.ok
-        ? response.json()
-        : response.text().then(message => Promise.reject(Error(message)))
-    ).then(response => {
-      this.props.onSuccess(response.token);
+    post('/auth', {body: jsonBlob({password})}).then(response => {
+      if (response && typeof response.token === 'string') {
+        this.props.onSuccess(response.token);
+      } else {
+        throw Error('Unexpected auth API response');
+      }
     }).catch(err => {
       this.error(err.message);
     });

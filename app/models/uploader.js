@@ -24,11 +24,11 @@ exports.Uploader = class Uploader {
       });
 
     const uploaders =
-      map(groupBy(results, r => r.uploader.toLowerCase()), (results, key) =>
+      map(groupBy(results, r => r.uploader.toLowerCase()), (grouped, key) =>
         new Uploader({
           id: key,
-          name: first(results).uploader,
-          uploads: sumBy(results, r => Number(r.COUNT)),
+          name: first(grouped).uploader,
+          uploads: sumBy(grouped, r => Number(r.COUNT)),
         })
       );
 
