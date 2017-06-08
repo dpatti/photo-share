@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {clamp} from 'lodash';
+import Swipeable from 'react-swipeable';
 import {Upload} from 'app/models/upload';
 import {GalleryUploadComponent} from 'app/components/gallery-upload-component';
 
@@ -73,11 +74,15 @@ export class GalleryComponent extends React.Component {
             onClick={() => this.navigate('back')}
           >&lang;</button>
 
-          <div className='gallery__upload'>
+          <Swipeable
+            className='gallery__upload'
+            onSwipedLeft={() => this.navigate('forward')}
+            onSwipedRight={() => this.navigate('back')}
+          >
             <GalleryUploadComponent
               upload={this.props.activeUpload}
             />
-          </div>
+          </Swipeable>
 
           <button
             disabled={this.props.index === this.props.total - 1}
