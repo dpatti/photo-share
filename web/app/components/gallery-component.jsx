@@ -63,7 +63,7 @@ export class GalleryComponent extends React.Component {
           <button
             className='gallery__button gallery__close'
             onClick={() => this.props.onGallerySwitch(null)}
-          >x</button>
+          >&#10799;</button>
         </div>
 
         <div className='gallery__display'>
@@ -71,7 +71,7 @@ export class GalleryComponent extends React.Component {
             disabled={this.props.index === 0}
             className='gallery__button gallery__prev'
             onClick={() => this.navigate('back')}
-          >&lt;</button>
+          >&lang;</button>
 
           <div className='gallery__upload'>
             <GalleryUploadComponent
@@ -83,7 +83,7 @@ export class GalleryComponent extends React.Component {
             disabled={this.props.index === this.props.total - 1}
             className='gallery__button gallery__next'
             onClick={() => this.navigate('forward')}
-          >&gt;</button>
+          >&rang;</button>
         </div>
       </div>
     );

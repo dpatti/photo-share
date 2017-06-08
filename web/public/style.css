@@ -151,8 +151,7 @@ a, a:visited, a:active {
 }
 
   .gallery__controls {
-    flex: 0 0 1em;
-    padding: 1em;
+    flex: 0 0 auto;
 
     display: flex;
     justify-content: flex-end;
@@ -166,6 +165,7 @@ a, a:visited, a:active {
   }
 
   .gallery__button {
+    padding: 0.5em;
     background: none;
     color: #fff;
     border: none;
