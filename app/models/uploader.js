@@ -1,6 +1,7 @@
 // @flow
 const {first, groupBy, map, sumBy} = require('lodash');
 
+const Sequelize = require('sequelize');
 const {Upload} = require('app/models');
 
 exports.Uploader = class Uploader {
@@ -19,7 +20,7 @@ exports.Uploader = class Uploader {
       await Upload.aggregate('*', 'COUNT', {
         attributes: ['uploader'],
         group: 'uploader',
-        order: 'COUNT(*) desc',
+        order: [[Sequelize.fn('COUNT', '*'), 'DESC']],
         plain: false,
       });
 
