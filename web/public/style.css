@@ -11,8 +11,8 @@ a, a:visited, a:active {
   color: inherit;
 }
 
-#stage {
-  height: 100vh;
+html, body, #stage {
+  height: 100%;
   overflow: hidden;
 }
 
