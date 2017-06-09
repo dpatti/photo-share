@@ -11,6 +11,7 @@ const Upload = exports.Upload = database.define('upload', {
   uploader: {type: Sequelize.STRING, allowNull: false},
   fileUrl: {type: Sequelize.STRING, allowNull: false, unique: true},
   previewUrl: {type: Sequelize.STRING, null: true},
+  galleryUrl: {type: Sequelize.STRING, null: true},
 }, {
   timestamps: true,
   paranoid: true,

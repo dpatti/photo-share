@@ -1,4 +1,6 @@
 // @flow
+import type {ResizerSpec} from 'app/services/resizer';
+
 const {createHash} = require('crypto');
 const {createReadStream} = require('fs');
 const {join, parse: parsePath, sep} = require('path');
@@ -9,7 +11,7 @@ const {lookup} = require('mime-types');
 const request = require('request');
 
 const {storage: config} = require('./config');
-const {PREVIEW_MIME_TYPE, generate} = require('app/services/previewer');
+const {PREVIEW_MIME_TYPE, generate} = require('app/services/resizer');
 const {fromStream} = require('app/util/promise');
 const s3 = require('app/util/s3');
 
@@ -64,6 +66,11 @@ class StoredFile {
     return this._urlFor(`${name}_preview.jpg`);
   }
 
+  galleryUrl(): URL {
+    const {name} = parsePath(this.filename);
+    return this._urlFor(`${name}_gallery.jpg`);
+  }
+
   mimeType(): string {
     return lookup(this.filename);
   }
@@ -72,8 +79,8 @@ class StoredFile {
     return this.source();
   }
 
-  generatePreview(): stream$Readable {
-    return generate(this.read(), this.mimeType());
+  resize(spec: ResizerSpec): stream$Readable {
+    return generate(spec, this.read(), this.mimeType());
   }
 
   _urlFor(filename: string): URL {
@@ -95,7 +102,16 @@ exports.putPreview = (file: StoredFile) =>
   s3.put(s3Client, {
     bucket: config.bucket,
     path: file.previewUrl().pathname,
-    source: file.generatePreview(),
+    source: file.resize({type: 'cover', size: 500}),
+    contentType: PREVIEW_MIME_TYPE,
+    cacheControl: CACHE_CONTROL_PUBLIC,
+  });
+
+exports.putGallery = (file: StoredFile) =>
+  s3.put(s3Client, {
+    bucket: config.bucket,
+    path: file.galleryUrl().pathname,
+    source: file.resize({type: 'contain', size: 1000}),
     contentType: PREVIEW_MIME_TYPE,
     cacheControl: CACHE_CONTROL_PUBLIC,
   });
