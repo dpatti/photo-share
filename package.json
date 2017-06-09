@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "db-sync": "bin/run db-sync",
-    "lint": "eslint app/**/*.js scripts/**/*.js web/app/**/*.js{,x}",
+    "lint": "eslint {app,migrations,scripts,web/app}/**/*.js{,x}",
+    "migrate": "bin/run migrate",
     "repl": "bin/node",
     "start": "bin/run start",
     "test": "yarn run lint; yarn run typecheck",
@@ -39,6 +40,7 @@
     "flow-bin": "^0.46.0",
     "flow-remove-types": "^1.2.1",
     "flow-typed": "^2.1.2",
-    "koa-webpack": "^0.5.1"
+    "koa-webpack": "^0.5.1",
+    "umzug": "^2.0.1"
   }
 }
