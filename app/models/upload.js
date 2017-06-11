@@ -10,8 +10,8 @@ const Upload = exports.Upload = database.define('upload', {
   type: {type: Sequelize.ENUM('image', 'video'), allowNull: false},
   uploader: {type: Sequelize.STRING, allowNull: false},
   fileUrl: {type: Sequelize.STRING, allowNull: false, unique: true},
-  previewUrl: {type: Sequelize.STRING, null: true},
-  galleryUrl: {type: Sequelize.STRING, null: true},
+  previewUrl: {type: Sequelize.STRING, allowNull: true},
+  galleryUrl: {type: Sequelize.STRING, allowNull: true},
 }, {
   timestamps: true,
   paranoid: true,

@@ -60,9 +60,9 @@ exports.create = compose([
       return respond(context, existing);
     }
 
-    // No hooks because of https://github.com/sequelize/sequelize/issues/7769
-    const err = await upload.validate({hooks: false});
-    if (err) {
+    try {
+      await upload.validate();
+    } catch (err) {
       return context.throw(422, err.message);
     }
     await put(file);
