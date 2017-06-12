@@ -1,4 +1,6 @@
 // @flow
+import type {Stream} from 'highland';
+
 const {delay} = require('bluebird');
 const highland = require('highland');
 const {isNull, map, max} = require('lodash');
@@ -12,6 +14,21 @@ const {Upload} = require('app/models');
 
 const PROCESS_CONCURRENCY = Number(process.env.PROCESS_CONCURRENCY) || os.cpus().length;
 const POLL_DELAY = Number(process.env.POLL_DELAY) || 1000;
+const RETRY_DELAY = Number(process.env.RETRY_DELAY) || 1000;
+const RETRY_BACKOFF = Number(process.env.RETRY_BACKOFF) || 2;
+
+const Subject = () => {
+  const sub = {
+    push: (_) => {
+      throw new Error('You must be consuming the subject in order to push to it');
+    },
+    stream: highland(push => {
+      sub.push = (x) => push(null, x);
+    }),
+  };
+
+  return sub;
+};
 
 const poll = <Obj, Iter>(f: Iter => Promise<[Array<Obj>, Iter]>, iter: Iter) => {
   return highland((push, next) => {
@@ -75,12 +92,33 @@ const generatePreview = (upload: Upload) =>
     return upload;
   })());
 
+const withRetries =
+  <S, T>(f: S => Stream<T>): (Stream<S> => Stream<Stream<T>>) =>
+    (source: Stream<S>): Stream<Stream<T>> => {
+      const newItems = source.map(item => [item, 0]);
+      const retry = Subject();
+
+      return highland([retry.stream, newItems]).
+        merge().
+        map(([item, retries]) => {
+          return f(item).errors(err => {
+            const time = RETRY_DELAY * Math.pow(RETRY_BACKOFF, retries);
+            logger.error(`Retrying in ${time}ms after error:`, err.stack);
+
+            setTimeout(() => {
+              retry.push([item, retries + 1]);
+            }, time);
+          });
+        });
+    };
+
 logger.info('Polling...');
+
 poll(allPreviewless, 0).
-  map(generatePreview).
+  through(withRetries(generatePreview)).
   parallel(PROCESS_CONCURRENCY).
   errors(err => {
-    logger.error(err.stack);
+    logger.error('Error!', err.stack);
   }).
   each(result => {
     logger.info('Saved preview for:', result.id, result.filename);
