@@ -264,6 +264,12 @@ html, body, #stage {
     text-align: center;
   }
 
+  .uploader__active-uploads {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   .uploader__form {
     margin: 10px;
     flex-grow: 1;
@@ -331,6 +337,31 @@ html, body, #stage {
 
   .error-list__item-button {
     flex: none;
+  }
+
+.progress {
+  width: 50vw;
+  margin: 0.2em;
+  border: 0.2em solid black;
+  border-radius: 0.6em;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+  .progress__background {
+    transition: width 1s ease-out;
+    width: 0;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(0, 100, 200, 0.6);
+    z-index: -1;
+    width: 40%;
+  }
+
+  .progress__label {
+    margin: 0.4em;
+    text-align: center;
   }
 
 @media (max-width: 600px) {

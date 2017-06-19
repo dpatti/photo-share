@@ -1,7 +1,7 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import {first, isEmpty, flatMap, map, partition, uniq, without} from 'lodash';
+import {first, isEmpty, flatMap, map, partition, uniq, update, without} from 'lodash';
 import {extname} from 'path';
 
 import {NetworkError} from 'app/models/network-error';
@@ -12,11 +12,17 @@ import objectKeyStore from 'app/util/object-key-store';
 
 import {UploadProgressComponent} from './upload-progress-component';
 import {ErrorListComponent} from './error-list-component';
+import {ProgressComponent} from './progress-component';
 
 const UPLOAD_CONCURRENCY = 4;
 const ERROR_LIMIT = 3;
 
 const progressKey = objectKeyStore();
+
+type Stats = {
+  finished: number,
+  queued: number,
+};
 
 export class UploaderComponent extends React.Component {
   form: HTMLFormElement;
@@ -30,6 +36,7 @@ export class UploaderComponent extends React.Component {
     uploader: string,
     errors: Array<Error>,
     dropActive: boolean,
+    stats: Stats,
     staged: Array<File>,
     queue: Array<File>,
     active: Array<UploadProgress>,
@@ -41,6 +48,10 @@ export class UploaderComponent extends React.Component {
       uploader: localStorage.getItem('uploader') || '',
       errors: [],
       dropActive: false,
+      stats: {
+        finished: 0,
+        queued: 0,
+      },
       staged: [],
       queue: [],
       active: [],
@@ -116,6 +127,7 @@ export class UploaderComponent extends React.Component {
       // to prevent it from finishing after unmount
       this.setState(state => ({
         active: without(state.active, progress),
+        stats: update(state.stats, 'finished', n => n + 1),
       }));
     });
 
@@ -167,6 +179,7 @@ export class UploaderComponent extends React.Component {
   enqueueAll() {
     this.setState(state => ({
       queue: state.queue.concat(state.staged),
+      stats: update(state.stats, 'queued', n => n + 1),
       staged: [],
     }));
   }
@@ -217,7 +230,7 @@ export class UploaderComponent extends React.Component {
 
         { this.renderErrors() }
         { this.renderActiveUploads() }
-        { this.renderQueuedUploads() }
+        { this.renderUploadStats() }
 
         <label className='uploader__name-label'>
           {"What's your name?"}
@@ -249,7 +262,7 @@ export class UploaderComponent extends React.Component {
   renderActiveUploads() {
     if (!isEmpty(this.state.active)) {
       return (
-        <ul>{
+        <ul className='uploader__active-uploads'>{
           map(this.state.active, progress =>
             <li key={progressKey(progress)}>
               <UploadProgressComponent
@@ -262,9 +275,15 @@ export class UploaderComponent extends React.Component {
     }
   }
 
-  renderQueuedUploads() {
-    if (this.state.queue.length > 0) {
-      return <p>{`${this.state.queue.length} files waiting in queue`}</p>;
+  renderUploadStats() {
+    if (this.state.stats.queued > 0) {
+      return (
+        <ProgressComponent
+          progress={this.state.stats.finished}
+          total={this.state.stats.queued}
+          label={`${this.state.stats.finished} files uploaded`}
+        />
+      );
     }
   }
 

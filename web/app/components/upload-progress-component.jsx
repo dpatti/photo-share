@@ -2,6 +2,7 @@
 import React from 'react';
 
 import {UploadProgress} from 'app/models/upload-progress';
+import {ProgressComponent} from './progress-component';
 
 export class UploadProgressComponent extends React.Component {
   props: {
@@ -41,7 +42,11 @@ export class UploadProgressComponent extends React.Component {
 
   render() {
     return (
-      <p>{`Uploading ${this.props.uploadProgress.filename} (${this.state.percentage}%)`}</p>
+      <ProgressComponent
+        progress={this.state.percentage}
+        total={100}
+        label={`Uploading ${this.props.uploadProgress.filename}`}
+      />
     );
   }
 }
