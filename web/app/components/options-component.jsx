@@ -24,7 +24,7 @@ export class OptionsComponent extends React.Component {
           onClick={this.props.onRequestUpload}
         >{'Add your own images or videos'}</button>
 
-        <div>
+        <div className='options__filter'>
           <p>{'Show uploads from'}</p>
           <ul className='options__uploaders'>
             <li>{

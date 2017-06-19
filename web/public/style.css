@@ -70,6 +70,12 @@ html, body, #stage {
 
   .options__upload {
     font-size: 1.25em;
+    flex: 0 0 auto;
+  }
+
+  .options__filter {
+    display: flex;
+    flex-direction: column;
   }
 
   .options__uploaders {
@@ -77,6 +83,7 @@ html, body, #stage {
     padding-left: 1em;
     margin: 0;
     border-left: 1px solid #236499;
+    overflow: auto;
   }
 
   .options__uploader {
@@ -87,6 +94,8 @@ html, body, #stage {
     padding: 0.5em;
     outline: none;
     cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
   }
 
   .options__uploader--active {
@@ -323,3 +332,24 @@ html, body, #stage {
   .error-list__item-button {
     flex: none;
   }
+
+@media (max-width: 600px) {
+  .album {
+    flex-direction: column;
+  }
+
+  .options {
+    flex-direction: row;
+  }
+
+  .options__upload {
+    flex: 0 0 20%;
+    margin-right: 1em;
+  }
+
+  .options__uploaders {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+}
