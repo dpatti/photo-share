@@ -43,6 +43,7 @@ export class UploadProgressComponent extends React.Component {
   render() {
     return (
       <ProgressComponent
+        color='green'
         progress={this.state.percentage}
         total={100}
         label={`Uploading ${this.props.uploadProgress.filename}`}

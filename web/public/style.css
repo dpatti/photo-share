@@ -354,10 +354,17 @@ html, body, #stage {
     width: 0;
     height: 100%;
     position: absolute;
-    background-color: rgba(0, 100, 200, 0.6);
     z-index: -1;
     width: 40%;
   }
+
+    .progress__background--blue {
+      background-color: rgba(0, 100, 200, 0.6);
+    }
+
+    .progress__background--green {
+      background-color: rgba(0, 200, 100, 0.6);
+    }
 
   .progress__label {
     margin: 0.4em;

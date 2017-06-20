@@ -78,7 +78,7 @@ export class UploaderComponent extends React.Component {
         return;
       }
 
-      if (state.active.length > UPLOAD_CONCURRENCY) {
+      if (state.active.length >= UPLOAD_CONCURRENCY) {
         return;
       }
 
@@ -179,7 +179,7 @@ export class UploaderComponent extends React.Component {
   enqueueAll() {
     this.setState(state => ({
       queue: state.queue.concat(state.staged),
-      stats: update(state.stats, 'queued', n => n + 1),
+      stats: update(state.stats, 'queued', n => n + state.staged.length),
       staged: [],
     }));
   }
@@ -228,10 +228,6 @@ export class UploaderComponent extends React.Component {
           onClick={() => { this.props.onDoneUploading(); }}
         >{'Return to album'}</button>
 
-        { this.renderErrors() }
-        { this.renderActiveUploads() }
-        { this.renderUploadStats() }
-
         <label className='uploader__name-label'>
           {"What's your name?"}
           <input
@@ -241,6 +237,10 @@ export class UploaderComponent extends React.Component {
             onChange={e => { this.setUploader(e.target.value); }}
           />
         </label>
+
+        { this.renderErrors() }
+        { this.renderActiveUploads() }
+        { this.renderUploadStats() }
 
         { this.renderForm() }
       </div>
@@ -279,6 +279,7 @@ export class UploaderComponent extends React.Component {
     if (this.state.stats.queued > 0) {
       return (
         <ProgressComponent
+          color='blue'
           progress={this.state.stats.finished}
           total={this.state.stats.queued}
           label={`${this.state.stats.finished} files uploaded`}

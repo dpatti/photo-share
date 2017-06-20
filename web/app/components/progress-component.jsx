@@ -1,9 +1,16 @@
 // @flow
+import classnames from 'classnames';
 import {clamp} from 'lodash';
 import React from 'react';
 
+const colors = {
+  green: 'progress__background--green',
+  blue: 'progress__background--blue',
+};
+
 export class ProgressComponent extends React.Component {
   props: {
+    color: $Keys<typeof colors>,
     progress: number,
     total: number,
     label: string,
@@ -19,7 +26,7 @@ export class ProgressComponent extends React.Component {
     return (
       <div className='progress'>
         <div
-          className='progress__background'
+          className={classnames('progress__background', colors[this.props.color])}
           style={{width: this.percentage()}}
         ></div>
         <div className='progress__label'>{this.props.label}</div>
