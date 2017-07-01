@@ -1,5 +1,5 @@
 [version]
-0.46.0
+0.49.1
 
 [ignore]
 
@@ -10,4 +10,3 @@
 ./flow-typed
 
 [options]
-experimental.strict_call_arity=true
