@@ -31,7 +31,7 @@ exports.cover = (size: number): ResizerTransform =>
 const generateImagePreview =
   (transform: ResizerTransform, source: stream$Readable): stream$Readable =>
     magickWith(source,
-      flow(transform, image => image.setFormat(FORMAT))
+      flow(transform, image => image.autoOrient().setFormat(FORMAT))
     );
 
 const generateVideoPreview =
