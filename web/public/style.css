@@ -61,8 +61,9 @@ html, body, #stage {
 }
 
 .options {
+  background-color: #f2f2f2;
   flex: 0 10em;
-  margin: 1em;
+  padding: 1em;
 
   display: flex;
   flex-direction: column;
@@ -96,6 +97,7 @@ html, body, #stage {
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
+    margin: 0.2em;
   }
 
   .options__uploader--active {
